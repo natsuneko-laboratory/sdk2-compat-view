@@ -4,58 +4,71 @@
  *------------------------------------------------------------------------------------------*/
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Mochizuki.VRChat.VRC2CompatView.Internal
 {
     public class YamlReader : IDisposable
     {
         private readonly YamlReaderHandle _handle;
-        private bool _isDisposed;
 
         public YamlReader(string source)
         {
-            _isDisposed = false;
             _handle = NativeMethods.CreateReader(source);
         }
 
         public void Dispose()
         {
-            if (!_isDisposed)
-                NativeMethods.DestroyReader(_handle);
-            _isDisposed = true;
+            if (_handle != null && !_handle.IsInvalid)
+                _handle.Dispose();
         }
 
-        public YamlDocs FindProperty(string path)
+        public YamlDocs FindProperty(string path, ulong index = 0)
         {
-            return new YamlDocs(NativeMethods.FindProperty(_handle, path));
+            if (_handle == null)
+                throw new InvalidOperationException();
+
+            return new YamlDocs(NativeMethods.FindProperty(_handle, path, index));
         }
 
-        public T GetValueAs<T>(string path) where T : class
+        // ReSharper disable once InconsistentNaming
+        public List<YamlDocs> FindBy1stKey(string key)
+        {
+            if (_handle == null)
+                throw new InvalidOperationException();
+
+            var size = NativeMethods.FindBy1stKey(_handle, key, null, 0);
+            var buffer = new IntPtr[size];
+            NativeMethods.FindBy1stKey(_handle, key, buffer, (ulong) buffer.Length);
+
+            return buffer.Select(w => new YamlDocsHandle(w)).Select(w => new YamlDocs(w)).ToList();
+        }
+
+        public T GetValueAs<T>(string path, ulong index = 0) where T : class
         {
             var @default = typeof(T);
-            using (var value = FindProperty(path))
+            var value = FindProperty(path, index);
+            switch (@default)
             {
-                switch (@default)
-                {
-                    // ReSharper disable PatternAlwaysOfType
+                // ReSharper disable PatternAlwaysOfType
 
-                    case Type _ when @default == typeof(bool):
-                        return value.BoolValue as T;
+                case Type _ when @default == typeof(bool):
+                    return value.BoolValue as T;
 
-                    case Type _ when @default == typeof(long):
-                        return value.LongValue as T;
+                case Type _ when @default == typeof(long):
+                    return value.LongValue as T;
 
-                    case Type _ when @default == typeof(double):
-                        return value.DoubleValue as T;
+                case Type _ when @default == typeof(double):
+                    return value.DoubleValue as T;
 
-                    case Type _ when @default == typeof(string):
-                        return value.StringValue as T;
+                case Type _ when @default == typeof(string):
+                    return value.StringValue as T;
 
-                    // ReSharper restore PatternAlwaysOfType
+                // ReSharper restore PatternAlwaysOfType
 
-                    default:
-                        return null;
-                }
+                default:
+                    return null;
             }
         }
     }

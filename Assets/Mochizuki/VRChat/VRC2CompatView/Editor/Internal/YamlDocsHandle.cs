@@ -14,6 +14,11 @@ namespace Mochizuki.VRChat.VRC2CompatView.Internal
 
         public YamlDocsHandle() : base(IntPtr.Zero, true) { }
 
+        public YamlDocsHandle(IntPtr ptr) : base(IntPtr.Zero, true)
+        {
+            SetHandle(ptr);
+        }
+
         protected override bool ReleaseHandle()
         {
             if (IsInvalid)

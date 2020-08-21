@@ -3,6 +3,7 @@
  * Licensed under the MIT License. See LICENSE in the project root for license information.
  *------------------------------------------------------------------------------------------*/
 
+using System;
 using System.Runtime.InteropServices;
 
 namespace Mochizuki.VRChat.VRC2CompatView.Internal
@@ -13,7 +14,13 @@ namespace Mochizuki.VRChat.VRC2CompatView.Internal
         public static extern YamlReaderHandle CreateReader(string source);
 
         [DllImport("vrc2_compat", EntryPoint = "find_property")]
-        public static extern YamlDocsHandle FindProperty(YamlReaderHandle handle, string path);
+        public static extern YamlDocsHandle FindProperty(YamlReaderHandle handle, string path, ulong index);
+
+        [DllImport("vrc2_compat", EntryPoint = "find_by_1st_key")]
+        public static extern ulong FindBy1stKey(YamlReaderHandle handle, string key, IntPtr[] buffer, ulong bufferSize);
+
+        [DllImport("vrc2_compat", EntryPoint = "doument_size")]
+        public static extern ulong DocumentSize(YamlReaderHandle handle);
 
         [DllImport("vrc2_compat", EntryPoint = "destroy_reader")]
         public static extern void DestroyReader(YamlReaderHandle handle);

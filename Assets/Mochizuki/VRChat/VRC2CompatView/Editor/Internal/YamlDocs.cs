@@ -11,21 +11,21 @@ namespace Mochizuki.VRChat.VRC2CompatView.Internal
     {
         private readonly YamlDocsHandle _handle;
 
-        public bool BoolValue => NativeMethods.AsBool(_handle);
+        public bool BoolValue => SafeAccess(() => NativeMethods.AsBool(_handle));
 
-        public long LongValue => NativeMethods.AsLong(_handle);
+        public long LongValue => SafeAccess(() => NativeMethods.AsLong(_handle));
 
-        public double DoubleValue => NativeMethods.AsDouble(_handle);
+        public double DoubleValue => SafeAccess(() => NativeMethods.AsDouble(_handle));
 
-        public string StringValue => NativeMethods.AsString(_handle).AsString();
+        public string StringValue => SafeAccess(() => NativeMethods.AsString(_handle).AsString());
 
-        public bool IsBadValue => NativeMethods.IsBadValue(_handle);
+        public bool IsBadValue => SafeAccess(() => NativeMethods.IsBadValue(_handle));
 
-        public bool IsNull => NativeMethods.IsNull(_handle);
+        public bool IsNull => SafeAccess(() => NativeMethods.IsNull(_handle));
 
-        public bool IsArray => NativeMethods.IsArray(_handle);
+        public bool IsArray => SafeAccess(() => NativeMethods.IsArray(_handle));
 
-        public ulong ArraySize => NativeMethods.ArraySize(_handle);
+        public ulong ArraySize => SafeAccess(() => NativeMethods.ArraySize(_handle));
 
         public YamlDocs(YamlDocsHandle handle)
         {
@@ -34,47 +34,56 @@ namespace Mochizuki.VRChat.VRC2CompatView.Internal
 
         public void Dispose()
         {
-            NativeMethods.DestroyDocs(_handle);
+            if (_handle != null && !_handle.IsInvalid)
+                _handle.Dispose();
         }
 
         public YamlDocs FindRelative(string path)
         {
+            if (_handle == null)
+                throw new InvalidOperationException();
             return new YamlDocs(NativeMethods.FindRelative(_handle, path));
         }
 
         public T GetRelativeValueAs<T>(string path)
         {
             var @default = typeof(T);
-            using (var value = FindRelative(path))
+            var value = FindRelative(path);
+
+            switch (@default)
             {
-                switch (@default)
-                {
-                    // ReSharper disable PatternAlwaysOfType
+                // ReSharper disable PatternAlwaysOfType
 
-                    case Type _ when @default == typeof(bool):
-                        if (value.BoolValue is T boolValue) return boolValue;
-                        break;
+                case Type _ when @default == typeof(bool):
+                    if (value.BoolValue is T boolValue) return boolValue;
+                    break;
 
-                    case Type _ when @default == typeof(long):
-                        if (value.LongValue is T longValue) return longValue;
-                        break;
+                case Type _ when @default == typeof(long):
+                    if (value.LongValue is T longValue) return longValue;
+                    break;
 
-                    case Type _ when @default == typeof(double):
-                        if (value.DoubleValue is T doubleValue) return doubleValue;
-                        break;
+                case Type _ when @default == typeof(double):
+                    if (value.DoubleValue is T doubleValue) return doubleValue;
+                    break;
 
-                    case Type _ when @default == typeof(string):
-                        if (value.StringValue is T stringValue) return stringValue;
-                        break;
+                case Type _ when @default == typeof(string):
+                    if (value.StringValue is T stringValue) return stringValue;
+                    break;
 
-                    // ReSharper restore PatternAlwaysOfType
+                // ReSharper restore PatternAlwaysOfType
 
-                    default:
-                        return default;
-                }
+                default:
+                    return default;
             }
 
             return default;
+        }
+
+        private T SafeAccess<T>(Func<T> func)
+        {
+            if (_handle == null)
+                throw new InvalidOperationException();
+            return func.Invoke();
         }
     }
 }
