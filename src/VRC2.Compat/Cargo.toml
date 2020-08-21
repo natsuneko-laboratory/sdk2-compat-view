@@ -1,0 +1,13 @@
+[package]
+name = "vrc2_compat_view"
+version = "0.1.0"
+authors = ["Fuyuno Mikazuki", "Natsuneko"]
+edition = "2018"
+
+[lib]
+name = "vrc2_compat"
+crate-type = ["dylib"]
+
+[dependencies]
+libc = "0.2"
+yaml-rust = "0.4"
