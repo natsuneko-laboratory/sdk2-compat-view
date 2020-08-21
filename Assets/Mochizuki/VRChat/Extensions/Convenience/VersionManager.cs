@@ -38,6 +38,8 @@ namespace Mochizuki.VRChat.Extensions.Convenience
                 if (_www.isNetworkError || _www.isHttpError)
                 {
                     _latestVersion = "0.0.0";
+
+                    Debug.Log($"[Mochizuki.Extensions] Failed to fetch the remote version, set the latest version of {_repository} to 0.0.0.");
                     return _latestVersion;
                 }
 

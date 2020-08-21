@@ -103,13 +103,13 @@ namespace Mochizuki.VRChat.Extensions.VRC
             }
         }
 
-        public static bool HasAnimationLayer(this VRCAvatarDescriptor avatar, VRCAvatarDescriptor.AnimLayerType layer)
+        public static bool HasAnimationLayer(this VRCAvatarDescriptor avatar, VRCAvatarDescriptor.AnimLayerType layer, bool isCheckEnabled = true)
         {
             if (!avatar.customizeAnimationLayers)
                 return false;
 
             var anim = avatar.GetAnimationLayer(layer);
-            return !anim.isDefault && anim.isEnabled && anim.animatorController != null;
+            return !anim.isDefault && (!isCheckEnabled || anim.isEnabled) && anim.animatorController != null;
         }
 
         #endregion

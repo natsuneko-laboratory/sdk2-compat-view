@@ -5,6 +5,8 @@
 
 #if UNITY_EDITOR
 
+using System.Linq;
+
 using UnityEditor.Animations;
 
 namespace Mochizuki.VRChat.Extensions.Unity
@@ -29,6 +31,17 @@ namespace Mochizuki.VRChat.Extensions.Unity
 
             // source.destinationState is ignored because it is resolved by parent
             // source.destinationStateMachine is ignored because it is resolved by parent
+        }
+        public static bool HasCondition(this AnimatorStateTransition obj, string parameter, AnimatorConditionMode mode, float threshold)
+        {
+            var condition = new AnimatorCondition { parameter = parameter, mode = mode, threshold = threshold };
+            return obj.HasCondition(condition);
+        }
+        
+        public static bool HasCondition(this AnimatorStateTransition obj, AnimatorCondition condition)
+        {
+            var conditions = obj.conditions;
+            return conditions.Any(w => condition.Equals(w));
         }
     }
 }

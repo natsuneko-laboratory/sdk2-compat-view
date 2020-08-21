@@ -43,19 +43,14 @@ namespace Mochizuki.VRChat.Extensions
         {
             if (obj == null)
             {
-                Debug.LogWarning($"[Mochizuki.VRChat.AssetMerger] {nameof(obj)} is null, return default(T).");
+                Debug.LogWarning($"[Mochizuki.Extensions] {nameof(obj)} is null, return default(T).");
                 return default;
             }
 
             var instanceId = obj.GetInstanceID();
-            if (InternalCaches.ContainsKey(instanceId))
-            {
-                Debug.Log($"return caches of instance {instanceId}");
-                return InternalCaches[instanceId];
-            }
+            if (InternalCaches.ContainsKey(instanceId)) return InternalCaches[instanceId];
 
             InternalCaches.Add(instanceId, func.Invoke(obj));
-            Debug.Log($"return new instance of {instanceId}");
             return InternalCaches[instanceId];
         }
 
