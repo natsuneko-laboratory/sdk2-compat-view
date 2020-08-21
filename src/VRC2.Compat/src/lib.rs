@@ -47,16 +47,16 @@ impl YamlReader {
         YamlReader { inner: loader }
     }
 
-    fn read_path(&self, path: String) -> Yaml {
-        let docs = &self.inner[0];
+    fn read_path(&self, path: String, index: usize) -> Yaml {
+        let docs = &self.inner[index];
         match path.parse::<usize>() {
             Ok(value) => docs[value].clone(), // access as string
             Err(_) => docs[path.as_str()].clone(),
         }
     }
 
-    fn read_paths(&self, paths: Vec<String>) -> Yaml {
-        let mut docs = &self.inner[0];
+    fn read_paths(&self, paths: Vec<String>, index: usize) -> Yaml {
+        let mut docs = &self.inner[index];
 
         for path in paths {
             docs = match path.parse::<usize>() {
@@ -68,11 +68,29 @@ impl YamlReader {
         return docs.clone();
     }
 
-    fn find_property(&self, path: String) -> YamlDocs {
+    fn find_property(&self, path: String, index: usize) -> YamlDocs {
         if path.contains(".") {
-            return YamlDocs::new(self.read_paths(path.split(".").map(|w| w.to_owned()).collect()));
+            return YamlDocs::new(
+                self.read_paths(path.split(".").map(|w| w.to_owned()).collect(), index),
+            );
         }
-        YamlDocs::new(self.read_path(path))
+        YamlDocs::new(self.read_path(path, index))
+    }
+
+    fn find_by_1st_key(&self, key: String) -> Vec<YamlDocs> {
+        let mut vector: Vec<YamlDocs> = vec![];
+
+        for doc in &self.inner {
+            if !doc[key.as_str()].is_badvalue() {
+                vector.push(YamlDocs::new(doc.clone()));
+            }
+        }
+
+        vector
+    }
+
+    fn array_size(&self) -> u64 {
+        self.inner.len() as u64
     }
 }
 
@@ -177,10 +195,47 @@ pub unsafe extern "C" fn create_reader(raw: *const CChar) -> *mut YamlReader {
 pub unsafe extern "C" fn find_property(
     handle: *mut YamlReader,
     raw: *const CChar,
+    index: u64,
 ) -> *mut YamlDocs {
     let reader = &*handle;
     let path = FFIUtility::to_r_string(raw).unwrap();
-    Box::into_raw(Box::new(reader.find_property(path)))
+    Box::into_raw(Box::new(reader.find_property(path, index as usize)))
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn find_by_1st_key(
+    handle: *mut YamlReader,
+    raw: *const CChar,
+    buffer: *mut *const (),
+    buffer_size: u64,
+) -> u64 {
+    let reader = &*handle;
+    let key = FFIUtility::to_r_string(raw).unwrap();
+    let docs = reader.find_by_1st_key(key);
+
+    let size = docs.len() as u64;
+
+    if buffer == std::ptr::null_mut::<*const ()>() {
+        return size;
+    }
+
+    if buffer_size < size {
+        return 0;
+    }
+
+    let mut ptr = buffer;
+    for doc in docs {
+        *ptr = Box::into_raw(Box::new(doc)) as *const ();
+        ptr = ptr.add(1);
+    }
+
+    return size;
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn document_size(handle: *mut YamlReader) -> u64 {
+    let reader = &*handle;
+    reader.array_size()
 }
 
 #[no_mangle]
