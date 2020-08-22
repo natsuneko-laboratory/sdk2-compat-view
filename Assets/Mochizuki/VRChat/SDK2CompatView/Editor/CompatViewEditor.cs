@@ -28,6 +28,7 @@ namespace Mochizuki.VRChat.SDK2CompatView
         private static readonly VersionManager Manager;
 
         private Object _object;
+        private Vector2 _scroll = Vector2.zero;
 
         static CompatViewEditor()
         {
@@ -67,25 +68,39 @@ namespace Mochizuki.VRChat.SDK2CompatView
             using (new EditorGUILayout.HorizontalScope(GUI.skin.box))
                 EditorGUILayout.LabelField("VRCSDK2 で作成された各アセットの中身を閲覧できる Editor 拡張です。");
 
+            EditorGUI.BeginChangeCheck();
             _object = EditorGUILayoutExtensions.ObjectPicker("VRChat SDK2 Asset", _object);
+
+            if (EditorGUI.EndChangeCheck())
+                _scroll = Vector2.zero;
 
             EditorGUILayout.Space();
 
-            if (_object == null)
-                return;
+            _scroll = EditorGUILayout.BeginScrollView(_scroll);
 
-            switch (_object)
-            {
-                // VRC Animator Override
-                case AnimatorOverrideController o:
-                    ShowGui(o);
-                    break;
+            if (_object != null)
+                switch (_object)
+                {
+                    // VRC Animator Override
+                    case AnimatorOverrideController o:
+                        ShowGui(o);
+                        break;
 
-                // VRC Avatar Descriptor
-                case GameObject o:
-                    ShowGui(o);
-                    break;
-            }
+                    // VRC Avatar Descriptor
+                    case GameObject o:
+                        ShowGui(o);
+                        break;
+                }
+
+            if (Manager.HasNewVersion)
+                using (new EditorGUILayout.VerticalScope(GUI.skin.box))
+                {
+                    EditorGUILayout.LabelField($"{Product} の新しいバージョンがリリースされています。");
+                    if (GUILayout.Button("BOOTH からダウンロード"))
+                        Process.Start("https://natsuneko.booth.pm/items/2315841");
+                }
+
+            EditorGUILayout.EndScrollView();
         }
 
         private static void ShowGui(AnimatorOverrideController o)
