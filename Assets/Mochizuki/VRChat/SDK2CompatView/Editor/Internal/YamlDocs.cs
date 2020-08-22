@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Mochizuki.VRChat.VRC2CompatView.Internal
+namespace Mochizuki.VRChat.SDK2CompatView.Internal
 {
     public class YamlDocs : IDisposable
     {

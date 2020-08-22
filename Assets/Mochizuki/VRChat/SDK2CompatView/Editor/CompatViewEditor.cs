@@ -11,25 +11,25 @@ using System.Text.RegularExpressions;
 
 using Mochizuki.VRChat.Extensions.Convenience;
 using Mochizuki.VRChat.Extensions.Unity;
-using Mochizuki.VRChat.VRC2CompatView.Internal;
+using Mochizuki.VRChat.SDK2CompatView.Internal;
 
 using UnityEditor;
 
 using UnityEngine;
 
-namespace Mochizuki.VRChat.VRC2CompatView
+namespace Mochizuki.VRChat.SDK2CompatView
 {
     public class CompatViewEditor : EditorWindow
     {
-        private const string Version = "0.0.0";
-        private const string Product = "Mochizuki VRC2 Compat View";
+        private const string Version = "0.1.0";
+        private const string Product = "Mochizuki SDK2 Compat View";
         private static readonly VersionManager Manager;
 
         private Object _object;
 
         static CompatViewEditor()
         {
-            Manager = new VersionManager("mika-f/VRChat-VRC2CompatView", Version, new Regex("v(?<version>.*)"));
+            Manager = new VersionManager("mika-f/VRChat-SDK2CompatView", Version, new Regex("v(?<version>.*)"));
         }
 
         [InitializeOnLoadMethod]
@@ -38,17 +38,17 @@ namespace Mochizuki.VRChat.VRC2CompatView
             Manager.CheckNewVersion();
         }
 
-        [MenuItem("Mochizuki/VRChat/VRC2 Compat View/Documents")]
+        [MenuItem("Mochizuki/VRChat/SDK2 Compat View/Documents")]
         public static void ShowDocuments()
         {
-            Process.Start("https://docs.mochizuki.moe/VRChat/VRC2CompatView/");
+            Process.Start("https://docs.mochizuki.moe/VRChat/SDK2CompatView/");
         }
 
-        [MenuItem("Mochizuki/VRChat/VRC2 Compat View/Editor")]
+        [MenuItem("Mochizuki/VRChat/SDK2 Compat View/Editor")]
         public static void ShowWindow()
         {
             var window = GetWindow<CompatViewEditor>();
-            window.titleContent = new GUIContent("VRC2 Compat View");
+            window.titleContent = new GUIContent("SDK2 Compat View");
 
             window.Show();
         }
@@ -211,7 +211,7 @@ namespace Mochizuki.VRChat.VRC2CompatView
 
                         // Jaw Flap Blend Shape
                         case 2:
-                            EditorGUILayout.LabelField(new GUIContent("Jaw Flap Bone"), new GUIContent("Not Supported"));
+                            EditorGUILayout.LabelField(new GUIContent("Jaw Flap Blend Shape"), new GUIContent("Not Supported"));
                             break;
 
                         // Viseme Blend Shape

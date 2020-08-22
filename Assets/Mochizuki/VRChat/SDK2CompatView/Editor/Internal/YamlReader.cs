@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Mochizuki.VRChat.VRC2CompatView.Internal
+namespace Mochizuki.VRChat.SDK2CompatView.Internal
 {
     public class YamlReader : IDisposable
     {

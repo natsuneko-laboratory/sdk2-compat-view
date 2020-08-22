@@ -6,7 +6,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Mochizuki.VRChat.VRC2CompatView.Internal
+namespace Mochizuki.VRChat.SDK2CompatView.Internal
 {
     public class YamlReaderHandle : SafeHandle
     {

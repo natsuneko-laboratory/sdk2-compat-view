@@ -7,7 +7,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Mochizuki.VRChat.VRC2CompatView.Internal
+namespace Mochizuki.VRChat.SDK2CompatView.Internal
 {
     public class StringHandle : SafeHandle
     {

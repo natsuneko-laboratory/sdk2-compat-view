@@ -6,7 +6,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Mochizuki.VRChat.VRC2CompatView.Internal
+namespace Mochizuki.VRChat.Extensions.Convenience
 {
     public class CompositeDisposables : IDisposable
     {
