@@ -48,7 +48,8 @@ namespace Mochizuki.VRChat.Extensions
             }
 
             var instanceId = obj.GetInstanceID();
-            if (InternalCaches.ContainsKey(instanceId)) return InternalCaches[instanceId];
+            if (InternalCaches.ContainsKey(instanceId))
+                return InternalCaches[instanceId];
 
             InternalCaches.Add(instanceId, func.Invoke(obj));
             return InternalCaches[instanceId];
