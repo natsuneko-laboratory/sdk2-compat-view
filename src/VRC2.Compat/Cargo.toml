@@ -1,11 +1,11 @@
 [package]
-name = "vrc2_compat_view"
+name = "sdk2_compat_view"
 version = "0.1.0"
 authors = ["Fuyuno Mikazuki", "Natsuneko"]
 edition = "2018"
 
 [lib]
-name = "vrc2_compat"
+name = "sdk2_compat"
 crate-type = ["dylib"]
 
 [dependencies]
