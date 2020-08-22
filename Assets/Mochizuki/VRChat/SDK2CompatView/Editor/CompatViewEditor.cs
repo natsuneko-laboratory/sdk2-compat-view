@@ -16,6 +16,7 @@ using Mochizuki.VRChat.SDK2CompatView.Internal;
 using UnityEditor;
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Mochizuki.VRChat.SDK2CompatView
 {
@@ -23,6 +24,7 @@ namespace Mochizuki.VRChat.SDK2CompatView
     {
         private const string Version = "0.1.0";
         private const string Product = "Mochizuki SDK2 Compat View";
+        private static readonly Regex UnityStripped = new Regex(@"--- !u!\d+ &\d+ stripped");
         private static readonly VersionManager Manager;
 
         private Object _object;
@@ -154,9 +156,15 @@ namespace Mochizuki.VRChat.SDK2CompatView
             if (o.GetComponents<MonoBehaviour>().All(w => w != null))
                 return;
 
-            using (var sr = new StreamReader(AssetDatabase.GetAssetPath(o)))
+            var path = string.IsNullOrWhiteSpace(AssetDatabase.GetAssetPath(o)) ? SceneManager.GetActiveScene().path : AssetDatabase.GetAssetPath(o);
+
+            using (var sr = new StreamReader(path))
             {
-                var yr = new YamlReader(sr.ReadToEnd());
+                var source = sr.ReadToEnd();
+
+                // load YAML with stripped invalid tags
+                // see also : https://github.com/chyh1990/yaml-rust/issues/141
+                var yr = new YamlReader(UnityStripped.Replace(source, ""));
                 var behaviours = yr.FindBy1stKey("MonoBehaviour").Select(w => w.FindRelative("MonoBehaviour"));
                 var avatarDescriptor = behaviours.FirstOrDefault(w =>
                 {
