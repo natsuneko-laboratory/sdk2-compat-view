@@ -7,6 +7,6 @@ namespace Mochizuki.VRChat.Extensions
 {
     public static class Constants
     {
-        public static string Version => "VRCSDK3A-0.3.1";
+        public static string Version => "VRCSDK3A-0.3.3";
     }
 }
