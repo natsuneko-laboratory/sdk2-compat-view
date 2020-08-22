@@ -237,7 +237,6 @@ namespace Mochizuki.VRChat.SDK2CompatView
                     {
                         // default
                         case 0:
-
                             break;
 
                         // Jaw Flap Bone
@@ -247,7 +246,7 @@ namespace Mochizuki.VRChat.SDK2CompatView
 
                         // Jaw Flap Blend Shape
                         case 2:
-                            EditorGUILayout.LabelField(new GUIContent("Jaw Flap Blend Shape"), new GUIContent("Not Supported"));
+                            EditorGUILayout.Popup("Jaw Flap Blend Shape", 0, new[] { avatarDescriptor.GetRelativeValueAs<string>("MouthOpenBlendShapeName") });
                             break;
 
                         // Viseme Blend Shape
