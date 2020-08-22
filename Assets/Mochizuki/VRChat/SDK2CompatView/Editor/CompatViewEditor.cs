@@ -23,7 +23,7 @@ namespace Mochizuki.VRChat.SDK2CompatView
 {
     public class CompatViewEditor : EditorWindow
     {
-        private const string Version = "0.2.0";
+        private const string Version = "0.2.1";
         private const string Product = "Mochizuki SDK2 Compat View";
         private static readonly Regex UnityStripped = new Regex(@"--- !u!\d+ &\d+ stripped");
         private static readonly PropertyInfo InspectorMode = typeof(SerializedObject).GetProperty("inspectorMode", BindingFlags.NonPublic | BindingFlags.Instance);
