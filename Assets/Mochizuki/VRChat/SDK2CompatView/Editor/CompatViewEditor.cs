@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 using Mochizuki.VRChat.Extensions.Convenience;
@@ -25,6 +26,7 @@ namespace Mochizuki.VRChat.SDK2CompatView
         private const string Version = "0.1.0";
         private const string Product = "Mochizuki SDK2 Compat View";
         private static readonly Regex UnityStripped = new Regex(@"--- !u!\d+ &\d+ stripped");
+        private static readonly PropertyInfo InspectorMode = typeof(SerializedObject).GetProperty("inspectorMode", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly VersionManager Manager;
 
         private Object _object;
@@ -195,14 +197,18 @@ namespace Mochizuki.VRChat.SDK2CompatView
 
                 using (new DisabledGroup(true))
                 {
-                    MonoBehaviour FullScanGameObjectInChildrenByFileId(long fileId)
+                    long GetLocalIdentifierByObject(Object obj)
                     {
-                        var gameObjects = o.GetComponentsInChildren<MonoBehaviour>();
-                        return gameObjects.Where(w => w != null).First(w =>
-                        {
-                            AssetDatabase.TryGetGUIDAndLocalFileIdentifier(w.GetInstanceID(), out _, out long localId);
-                            return localId == fileId;
-                        });
+                        var so = new SerializedObject(obj);
+                        InspectorMode.SetValue(so, UnityEditor.InspectorMode.Debug);
+
+                        return so.FindProperty("m_LocalIdentfierInFile").longValue;
+                    }
+
+                    T FullScanGameObjectInChildrenByFileId<T>(long fileId) where T : Object
+                    {
+                        var gameObjects = o.GetComponentsInChildren<T>();
+                        return gameObjects.Where(w => w != null).FirstOrDefault(w => fileId == GetLocalIdentifierByObject(w));
                     }
 
                     if (!EditorGUIUtility.wideMode)
@@ -237,11 +243,12 @@ namespace Mochizuki.VRChat.SDK2CompatView
                     {
                         // default
                         case 0:
+
                             break;
 
                         // Jaw Flap Bone
                         case 1:
-                            EditorGUILayoutExtensions.ReadonlyObjectPicker("Jaw Flap Bone", FullScanGameObjectInChildrenByFileId(avatarDescriptor.GetRelativeValueAs<long>("lipSyncJawBone.fileID")));
+                            EditorGUILayoutExtensions.ReadonlyObjectPicker("Jaw Flap Bone", FullScanGameObjectInChildrenByFileId<GameObject>(avatarDescriptor.GetRelativeValueAs<long>("lipSyncJawBone.fileID")));
                             break;
 
                         // Jaw Flap Blend Shape
@@ -251,7 +258,7 @@ namespace Mochizuki.VRChat.SDK2CompatView
 
                         // Viseme Blend Shape
                         case 3:
-                            EditorGUILayoutExtensions.ReadonlyObjectPicker("Face Mesh", FullScanGameObjectInChildrenByFileId(avatarDescriptor.GetRelativeValueAs<long>("VisemeSkinnedMesh.fileID")));
+                            EditorGUILayoutExtensions.ReadonlyObjectPicker("Face Mesh", FullScanGameObjectInChildrenByFileId<SkinnedMeshRenderer>(avatarDescriptor.GetRelativeValueAs<long>("VisemeSkinnedMesh.fileID")));
                             EditorGUILayout.Popup("Viseme: sil", 0, new[] { avatarDescriptor.GetRelativeValueAs<string>("VisemeBlendShapes.0") });
                             EditorGUILayout.Popup("Viseme: PP", 0, new[] { avatarDescriptor.GetRelativeValueAs<string>("VisemeBlendShapes.1") });
                             EditorGUILayout.Popup("Viseme: FF", 0, new[] { avatarDescriptor.GetRelativeValueAs<string>("VisemeBlendShapes.2") });
