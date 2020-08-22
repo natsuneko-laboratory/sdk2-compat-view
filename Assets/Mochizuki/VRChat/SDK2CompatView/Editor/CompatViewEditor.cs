@@ -71,6 +71,9 @@ namespace Mochizuki.VRChat.SDK2CompatView
 
             EditorGUILayout.Space();
 
+            if (_object == null)
+                return;
+
             switch (_object)
             {
                 // VRC Animator Override
