@@ -11,7 +11,7 @@ The Unity editor extension that allows you to load various assets created with V
 
 ## How to use
 
-https://docs.mochizuki.moe/VRChat/SDK2CompatView
+https://docs.mochizuki.moe/VRChat/SDK2CompatView/
 
 ## License
 
