@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 using Mochizuki.VRChat.Extensions.Convenience;
@@ -22,9 +23,10 @@ namespace Mochizuki.VRChat.SDK2CompatView
 {
     public class CompatViewEditor : EditorWindow
     {
-        private const string Version = "0.1.0";
+        private const string Version = "0.2.0";
         private const string Product = "Mochizuki SDK2 Compat View";
         private static readonly Regex UnityStripped = new Regex(@"--- !u!\d+ &\d+ stripped");
+        private static readonly PropertyInfo InspectorMode = typeof(SerializedObject).GetProperty("inspectorMode", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly VersionManager Manager;
 
         private Object _object;
@@ -195,6 +197,20 @@ namespace Mochizuki.VRChat.SDK2CompatView
 
                 using (new DisabledGroup(true))
                 {
+                    long GetLocalIdentifierByObject(Object obj)
+                    {
+                        var so = new SerializedObject(obj);
+                        InspectorMode.SetValue(so, UnityEditor.InspectorMode.Debug);
+
+                        return so.FindProperty("m_LocalIdentfierInFile").longValue;
+                    }
+
+                    T FullScanGameObjectInChildrenByFileId<T>(long fileId) where T : Object
+                    {
+                        var gameObjects = o.GetComponentsInChildren<T>();
+                        return gameObjects.Where(w => w != null).FirstOrDefault(w => fileId == GetLocalIdentifierByObject(w));
+                    }
+
                     if (!EditorGUIUtility.wideMode)
                     {
                         EditorGUIUtility.wideMode = true;
@@ -232,17 +248,17 @@ namespace Mochizuki.VRChat.SDK2CompatView
 
                         // Jaw Flap Bone
                         case 1:
-                            EditorGUILayout.LabelField(new GUIContent("Jaw Flap Bone"), new GUIContent("Not Supported"));
+                            EditorGUILayoutExtensions.ReadonlyObjectPicker("Jaw Flap Bone", FullScanGameObjectInChildrenByFileId<GameObject>(avatarDescriptor.GetRelativeValueAs<long>("lipSyncJawBone.fileID")));
                             break;
 
                         // Jaw Flap Blend Shape
                         case 2:
-                            EditorGUILayout.LabelField(new GUIContent("Jaw Flap Blend Shape"), new GUIContent("Not Supported"));
+                            EditorGUILayout.Popup("Jaw Flap Blend Shape", 0, new[] { avatarDescriptor.GetRelativeValueAs<string>("MouthOpenBlendShapeName") });
                             break;
 
                         // Viseme Blend Shape
                         case 3:
-                            EditorGUILayout.LabelField(new GUIContent("Face Mesh"), new GUIContent("Not Supported"));
+                            EditorGUILayoutExtensions.ReadonlyObjectPicker("Face Mesh", FullScanGameObjectInChildrenByFileId<SkinnedMeshRenderer>(avatarDescriptor.GetRelativeValueAs<long>("VisemeSkinnedMesh.fileID")));
                             EditorGUILayout.Popup("Viseme: sil", 0, new[] { avatarDescriptor.GetRelativeValueAs<string>("VisemeBlendShapes.0") });
                             EditorGUILayout.Popup("Viseme: PP", 0, new[] { avatarDescriptor.GetRelativeValueAs<string>("VisemeBlendShapes.1") });
                             EditorGUILayout.Popup("Viseme: FF", 0, new[] { avatarDescriptor.GetRelativeValueAs<string>("VisemeBlendShapes.2") });

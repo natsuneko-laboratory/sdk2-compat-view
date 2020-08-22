@@ -19,7 +19,7 @@ namespace Mochizuki.VRChat.SDK2CompatView.Internal
         [DllImport("sdk2_compat", EntryPoint = "find_by_1st_key")]
         public static extern ulong FindBy1stKey(YamlReaderHandle handle, string key, IntPtr[] buffer, ulong bufferSize);
 
-        [DllImport("sdk2_compat", EntryPoint = "doument_size")]
+        [DllImport("sdk2_compat", EntryPoint = "document_size")]
         public static extern ulong DocumentSize(YamlReaderHandle handle);
 
         [DllImport("sdk2_compat", EntryPoint = "destroy_reader")]
