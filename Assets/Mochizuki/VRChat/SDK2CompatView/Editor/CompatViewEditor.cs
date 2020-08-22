@@ -195,6 +195,16 @@ namespace Mochizuki.VRChat.SDK2CompatView
 
                 using (new DisabledGroup(true))
                 {
+                    MonoBehaviour FullScanGameObjectInChildrenByFileId(long fileId)
+                    {
+                        var gameObjects = o.GetComponentsInChildren<MonoBehaviour>();
+                        return gameObjects.Where(w => w != null).First(w =>
+                        {
+                            AssetDatabase.TryGetGUIDAndLocalFileIdentifier(w.GetInstanceID(), out _, out long localId);
+                            return localId == fileId;
+                        });
+                    }
+
                     if (!EditorGUIUtility.wideMode)
                     {
                         EditorGUIUtility.wideMode = true;
@@ -232,7 +242,7 @@ namespace Mochizuki.VRChat.SDK2CompatView
 
                         // Jaw Flap Bone
                         case 1:
-                            EditorGUILayout.LabelField(new GUIContent("Jaw Flap Bone"), new GUIContent("Not Supported"));
+                            EditorGUILayoutExtensions.ReadonlyObjectPicker("Jaw Flap Bone", FullScanGameObjectInChildrenByFileId(avatarDescriptor.GetRelativeValueAs<long>("lipSyncJawBone.fileID")));
                             break;
 
                         // Jaw Flap Blend Shape
@@ -242,7 +252,7 @@ namespace Mochizuki.VRChat.SDK2CompatView
 
                         // Viseme Blend Shape
                         case 3:
-                            EditorGUILayout.LabelField(new GUIContent("Face Mesh"), new GUIContent("Not Supported"));
+                            EditorGUILayoutExtensions.ReadonlyObjectPicker("Face Mesh", FullScanGameObjectInChildrenByFileId(avatarDescriptor.GetRelativeValueAs<long>("VisemeSkinnedMesh.fileID")));
                             EditorGUILayout.Popup("Viseme: sil", 0, new[] { avatarDescriptor.GetRelativeValueAs<string>("VisemeBlendShapes.0") });
                             EditorGUILayout.Popup("Viseme: PP", 0, new[] { avatarDescriptor.GetRelativeValueAs<string>("VisemeBlendShapes.1") });
                             EditorGUILayout.Popup("Viseme: FF", 0, new[] { avatarDescriptor.GetRelativeValueAs<string>("VisemeBlendShapes.2") });
