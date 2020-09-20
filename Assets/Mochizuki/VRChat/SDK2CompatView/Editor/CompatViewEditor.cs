@@ -231,7 +231,7 @@ namespace Mochizuki.VRChat.SDK2CompatView
                     EditorGUILayoutExtensions.ReadonlyObjectPicker("Custom Standing Anims", AssetDatabaseExtensions.LoadAssetFromGuid<AnimatorOverrideController>(customStandingAnim));
 
                     var customSittingAnim = avatarDescriptor.GetRelativeValueAs<string>("CustomSittingAnims.guid");
-                    EditorGUILayoutExtensions.ReadonlyObjectPicker("Custom Standing Anims", AssetDatabaseExtensions.LoadAssetFromGuid<AnimatorOverrideController>(customSittingAnim));
+                    EditorGUILayoutExtensions.ReadonlyObjectPicker("Custom Sitting Anims", AssetDatabaseExtensions.LoadAssetFromGuid<AnimatorOverrideController>(customSittingAnim));
 
                     var isScaleIpd = avatarDescriptor.GetRelativeValueAs<long>("ScaleIPD") == 1;
                     EditorGUILayout.Toggle("Scale IPD", isScaleIpd);
