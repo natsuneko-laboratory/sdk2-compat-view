@@ -8,6 +8,17 @@ The Unity editor extension that allows you to load various assets created with V
 ## Requirements
 
 - Unity 2018.4.20f1
+- VRCSDK3-AVATAR 2020.08.06.16.30 or greater
+  - This project does not directly dependent to VRCSDK, but used library dependent to it.
+
+## Installation
+
+1. Download UnityPackage from BOOTH
+
+### Download UnityPackage
+
+You can download latest version of UnityPackage from [BOOTH](https://natsuneko.booth.pm/items/2315841).
+Extract downloaded zip package and install UnityPackage into your project.
 
 ## How to use
 
