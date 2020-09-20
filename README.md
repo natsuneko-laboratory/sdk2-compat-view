@@ -17,7 +17,7 @@ The Unity editor extension that allows you to load various assets created with V
 
 ### Download UnityPackage
 
-You can download latest version of UnityPackage from [BOOTH](https://natsuneko.booth.pm/items/2315841).
+You can download latest version of UnityPackage from [BOOTH](https://natsuneko.booth.pm/items/2315841).  
 Extract downloaded zip package and install UnityPackage into your project.
 
 ## How to use
