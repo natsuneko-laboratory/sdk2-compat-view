@@ -3,7 +3,9 @@
     {
       "name": "Mochizuki",
       "url": "https://registry.npmjs.com",
-      "scopes": ["moe.mochizuki"]
+      "scopes": [
+        "moe.mochizuki"
+      ]
     }
   ],
   "dependencies": {
@@ -13,6 +15,10 @@
     "com.unity.package-manager-ui": "2.0.8",
     "com.unity.purchasing": "2.0.3",
     "com.unity.textmeshpro": "1.4.1",
+    "com.unity.xr.oculus.standalone": "1.38.4",
+    "com.unity.xr.openvr.standalone": "1.0.5",
+    "moe.mochizuki.variation-packager": "0.3.0",
+    "moe.mochizuki.vrchat.extensions-library": "0.3.3",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
     "com.unity.modules.assetbundle": "1.0.0",
@@ -42,7 +48,6 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0",
-    "moe.mochizuki.variation-packager": "0.2.0"
+    "com.unity.modules.xr": "1.0.0"
   }
 }
