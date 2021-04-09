@@ -1,8 +1,6 @@
 {
     "name": "Mochizuki.VRChat.SDK2CompatView",
-    "references": [
-        "Mochizuki.VRChat.Extensions"
-    ],
+    "references": [],
     "optionalUnityReferences": [],
     "includePlatforms": [
         "Editor"

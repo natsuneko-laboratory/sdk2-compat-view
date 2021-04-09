@@ -10,8 +10,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-using Mochizuki.VRChat.Extensions.Convenience;
-using Mochizuki.VRChat.Extensions.Unity;
 using Mochizuki.VRChat.SDK2CompatView.Internal;
 
 using UnityEditor;
@@ -23,7 +21,7 @@ namespace Mochizuki.VRChat.SDK2CompatView
 {
     public class CompatViewEditor : EditorWindow
     {
-        private const string Version = "0.2.1";
+        private const string Version = "0.2.2";
         private const string Product = "Mochizuki SDK2 Compat View";
         private static readonly Regex UnityStripped = new Regex(@"--- !u!\d+ &\d+ stripped");
         private static readonly PropertyInfo InspectorMode = typeof(SerializedObject).GetProperty("inspectorMode", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -46,7 +44,7 @@ namespace Mochizuki.VRChat.SDK2CompatView
         [MenuItem("Mochizuki/VRChat/SDK2 Compat View/Documents")]
         public static void ShowDocuments()
         {
-            Process.Start("https://docs.mochizuki.moe/VRChat/SDK2CompatView/");
+            Process.Start("https://docs.mochizuki.moe/vrchat/sdk2-compat-view/");
         }
 
         [MenuItem("Mochizuki/VRChat/SDK2 Compat View/Editor")]
@@ -71,7 +69,7 @@ namespace Mochizuki.VRChat.SDK2CompatView
                 EditorGUILayout.LabelField("VRCSDK2 で作成された各アセットの中身を閲覧できる Editor 拡張です。");
 
             EditorGUI.BeginChangeCheck();
-            _object = EditorGUILayoutExtensions.ObjectPicker("VRChat SDK2 Asset", _object);
+            _object = ObjectPicker("VRChat SDK2 Asset", _object);
 
             if (EditorGUI.EndChangeCheck())
                 _scroll = Vector2.zero;
@@ -121,7 +119,7 @@ namespace Mochizuki.VRChat.SDK2CompatView
                     var fileId = rt.GetRelativeValueAs<long>($"m_Clips.{i}.m_OriginalClip.fileID");
                     var guid = rt.GetRelativeValueAs<string>($"m_Clips.{i}.m_OverrideClip.guid");
 
-                    var motion = AssetDatabaseExtensions.LoadAssetFromGuid<AnimationClip>(guid);
+                    var motion = LoadAssetFromGuid<AnimationClip>(guid);
                     if (motion != null)
                         overrides.Add(new KeyValuePair<uint, Motion>((uint) fileId, motion));
                 }
@@ -131,42 +129,42 @@ namespace Mochizuki.VRChat.SDK2CompatView
                     return overrides.Find(w => w.Key == id).Value;
                 }
 
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("CROUCHIDLE", FindOverride(7400026));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("CROUCHWALKFWD", FindOverride(7400024));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("CROUCHWALKRT", FindOverride(7400028));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("EMOTE1", FindOverride(7400006));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("EMOTE2", FindOverride(7400008));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("EMOTE3", FindOverride(7400010));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("EMOTE4", FindOverride(7400012));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("EMOTE5", FindOverride(7400014));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("EMOTE6", FindOverride(7400016));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("EMOTE7", FindOverride(7400018));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("EMOTE8", FindOverride(7400020));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("FALL", FindOverride(7400022));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("FINGERPOINT", FindOverride(7400054));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("FIST", FindOverride(7400052));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("HANDGUN", FindOverride(7400064));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("HANDOPEN", FindOverride(7400058));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("IDLE", FindOverride(7400002));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("PROWNEFWD", FindOverride(7400066));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("PROWNEIDLE", FindOverride(7400004));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("ROCKNROLL", FindOverride(7400056));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("RUNBACK", FindOverride(7400036));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("RUNFWD", FindOverride(7400032));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("RUNSTRAFELT135", FindOverride(7400070));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("RUNSTRAFELT45", FindOverride(7400048));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("RUNSTRAFERT135", FindOverride(7400072));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("RUNSTRAFERT45", FindOverride(7400050));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("SPRINTFWD", FindOverride(7400030));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("STRAFELT135", FindOverride(7400040));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("STRAFELT45", FindOverride(7400044));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("STRAFERT", FindOverride(7400038));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("STRAFERT135", FindOverride(7400042));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("STRAFERT45", FindOverride(7400046));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("THUMBSUP", FindOverride(7400060));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("VICTORY", FindOverride(7400062));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("WALKBACK", FindOverride(7400068));
-                EditorGUILayoutExtensions.ReadonlyObjectPicker("WALKFWD", FindOverride(7400034));
+                ReadonlyObjectPicker("CROUCHIDLE", FindOverride(7400026));
+                ReadonlyObjectPicker("CROUCHWALKFWD", FindOverride(7400024));
+                ReadonlyObjectPicker("CROUCHWALKRT", FindOverride(7400028));
+                ReadonlyObjectPicker("EMOTE1", FindOverride(7400006));
+                ReadonlyObjectPicker("EMOTE2", FindOverride(7400008));
+                ReadonlyObjectPicker("EMOTE3", FindOverride(7400010));
+                ReadonlyObjectPicker("EMOTE4", FindOverride(7400012));
+                ReadonlyObjectPicker("EMOTE5", FindOverride(7400014));
+                ReadonlyObjectPicker("EMOTE6", FindOverride(7400016));
+                ReadonlyObjectPicker("EMOTE7", FindOverride(7400018));
+                ReadonlyObjectPicker("EMOTE8", FindOverride(7400020));
+                ReadonlyObjectPicker("FALL", FindOverride(7400022));
+                ReadonlyObjectPicker("FINGERPOINT", FindOverride(7400054));
+                ReadonlyObjectPicker("FIST", FindOverride(7400052));
+                ReadonlyObjectPicker("HANDGUN", FindOverride(7400064));
+                ReadonlyObjectPicker("HANDOPEN", FindOverride(7400058));
+                ReadonlyObjectPicker("IDLE", FindOverride(7400002));
+                ReadonlyObjectPicker("PROWNEFWD", FindOverride(7400066));
+                ReadonlyObjectPicker("PROWNEIDLE", FindOverride(7400004));
+                ReadonlyObjectPicker("ROCKNROLL", FindOverride(7400056));
+                ReadonlyObjectPicker("RUNBACK", FindOverride(7400036));
+                ReadonlyObjectPicker("RUNFWD", FindOverride(7400032));
+                ReadonlyObjectPicker("RUNSTRAFELT135", FindOverride(7400070));
+                ReadonlyObjectPicker("RUNSTRAFELT45", FindOverride(7400048));
+                ReadonlyObjectPicker("RUNSTRAFERT135", FindOverride(7400072));
+                ReadonlyObjectPicker("RUNSTRAFERT45", FindOverride(7400050));
+                ReadonlyObjectPicker("SPRINTFWD", FindOverride(7400030));
+                ReadonlyObjectPicker("STRAFELT135", FindOverride(7400040));
+                ReadonlyObjectPicker("STRAFELT45", FindOverride(7400044));
+                ReadonlyObjectPicker("STRAFERT", FindOverride(7400038));
+                ReadonlyObjectPicker("STRAFERT135", FindOverride(7400042));
+                ReadonlyObjectPicker("STRAFERT45", FindOverride(7400046));
+                ReadonlyObjectPicker("THUMBSUP", FindOverride(7400060));
+                ReadonlyObjectPicker("VICTORY", FindOverride(7400062));
+                ReadonlyObjectPicker("WALKBACK", FindOverride(7400068));
+                ReadonlyObjectPicker("WALKFWD", FindOverride(7400034));
             }
         }
 
@@ -195,7 +193,7 @@ namespace Mochizuki.VRChat.SDK2CompatView
                 if (avatarDescriptor == null)
                     return;
 
-                using (new DisabledGroup(true))
+                using (new EditorGUI.DisabledGroupScope(true))
                 {
                     long GetLocalIdentifierByObject(Object obj)
                     {
@@ -228,10 +226,10 @@ namespace Mochizuki.VRChat.SDK2CompatView
                     EditorGUILayout.Popup("Default Animation Set", (int) animation, new[] { "Male", "Female", "None" });
 
                     var customStandingAnim = avatarDescriptor.GetRelativeValueAs<string>("CustomStandingAnims.guid");
-                    EditorGUILayoutExtensions.ReadonlyObjectPicker("Custom Standing Anims", AssetDatabaseExtensions.LoadAssetFromGuid<AnimatorOverrideController>(customStandingAnim));
+                    ReadonlyObjectPicker("Custom Standing Anims", LoadAssetFromGuid<AnimatorOverrideController>(customStandingAnim));
 
                     var customSittingAnim = avatarDescriptor.GetRelativeValueAs<string>("CustomSittingAnims.guid");
-                    EditorGUILayoutExtensions.ReadonlyObjectPicker("Custom Sitting Anims", AssetDatabaseExtensions.LoadAssetFromGuid<AnimatorOverrideController>(customSittingAnim));
+                    ReadonlyObjectPicker("Custom Standing Anims", LoadAssetFromGuid<AnimatorOverrideController>(customSittingAnim));
 
                     var isScaleIpd = avatarDescriptor.GetRelativeValueAs<long>("ScaleIPD") == 1;
                     EditorGUILayout.Toggle("Scale IPD", isScaleIpd);
@@ -248,7 +246,7 @@ namespace Mochizuki.VRChat.SDK2CompatView
 
                         // Jaw Flap Bone
                         case 1:
-                            EditorGUILayoutExtensions.ReadonlyObjectPicker("Jaw Flap Bone", FullScanGameObjectInChildrenByFileId<GameObject>(avatarDescriptor.GetRelativeValueAs<long>("lipSyncJawBone.fileID")));
+                            ReadonlyObjectPicker("Jaw Flap Bone", FullScanGameObjectInChildrenByFileId<GameObject>(avatarDescriptor.GetRelativeValueAs<long>("lipSyncJawBone.fileID")));
                             break;
 
                         // Jaw Flap Blend Shape
@@ -258,7 +256,7 @@ namespace Mochizuki.VRChat.SDK2CompatView
 
                         // Viseme Blend Shape
                         case 3:
-                            EditorGUILayoutExtensions.ReadonlyObjectPicker("Face Mesh", FullScanGameObjectInChildrenByFileId<SkinnedMeshRenderer>(avatarDescriptor.GetRelativeValueAs<long>("VisemeSkinnedMesh.fileID")));
+                            ReadonlyObjectPicker("Face Mesh", FullScanGameObjectInChildrenByFileId<SkinnedMeshRenderer>(avatarDescriptor.GetRelativeValueAs<long>("VisemeSkinnedMesh.fileID")));
                             EditorGUILayout.Popup("Viseme: sil", 0, new[] { avatarDescriptor.GetRelativeValueAs<string>("VisemeBlendShapes.0") });
                             EditorGUILayout.Popup("Viseme: PP", 0, new[] { avatarDescriptor.GetRelativeValueAs<string>("VisemeBlendShapes.1") });
                             EditorGUILayout.Popup("Viseme: FF", 0, new[] { avatarDescriptor.GetRelativeValueAs<string>("VisemeBlendShapes.2") });
@@ -282,6 +280,29 @@ namespace Mochizuki.VRChat.SDK2CompatView
                     }
                 }
             }
+        }
+
+        /// <summary>
+        ///     Generics Wrapper of EditorGUILayout#ObjectField
+        /// </summary>
+        private static T ObjectPicker<T>(string label, T obj) where T : Object
+        {
+            return EditorGUILayout.ObjectField(new GUIContent(label), obj, typeof(T), true) as T;
+        }
+
+        /// <summary>
+        ///     Readonly version of ObjectPicker.
+        /// </summary>
+        private static T ReadonlyObjectPicker<T>(string label, T obj) where T : Object
+        {
+            using (new EditorGUI.DisabledGroupScope(true))
+                return ObjectPicker(label, obj);
+        }
+
+        private static T LoadAssetFromGuid<T>(string guid) where T : Object
+        {
+            var path = AssetDatabase.GUIDToAssetPath(guid);
+            return AssetDatabase.LoadAssetAtPath<T>(path);
         }
     }
 }
