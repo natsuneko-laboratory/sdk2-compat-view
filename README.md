@@ -26,4 +26,4 @@ https://docs.mochizuki.moe/VRChat/SDK2CompatView/
 
 ## License
 
-MIT by [@MikazukiFuyuno](https://twitter.com/MikazukiFuyuno) and [@6jz](https://twitter.com/6jz)
+MIT by [@6jz](https://twitter.com/6jz)
