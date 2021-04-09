@@ -1,9 +1,15 @@
-# SDK2 Compatible Viewer
+# VRChat SDK2 Compatible Viewer
 
-VRChat SDK3 (Avatar) を読み込んで VRChat SDK2 が読み込めなくなった環境で、 SDK2 で設定された各種設定を閲覧することが出来るようになる Unity Editor 拡張です。 VRCSDK2 および VRCSDK3 がインポートされていない Unity プロジェクトでも実行可能です。
+VRChat SDK3 (Avatar) を読み込んで VRChat SDK2 が読み込めなくなった環境で、 SDK2 で設定された各種設定を閲覧することが出来るようになる Unity Editor 拡張です。
+VRCSDK2 および VRCSDK3 がインポートされていない Unity プロジェクトでも実行可能です。
 
-なお、プロジェクト本体は GitHub にて公開されており、知識があれば誰でも無料で使用およびシステムの修正が可能です。
-https://github.com/mika-f/VRChat-SDK2CompatView
+閲覧できるアセットは以下の通りです。
+
+・Animator Override Controller
+・VRC Avatar Descriptor (SDK2)
+
+なお、このツール単体での VRChat SDK2 から、 VRChat Avatars SDK3 への移行は行えません。
+あらかじめご了承ください。
 
 
 ## 注意事項
@@ -27,12 +33,17 @@ GitHub 版でもほぼ同様のものは作成可能ですが、サポートな�
 以下のページにて解説しています。
 変更履歴も同様です。
 
-https://docs.mochizuki.moe/VRChat/SDK2CompatView/
+https://docs.mochizuki.moe/vrchat/sdk2-compat-view/
 
 
 ## 利用規約
 
-本配布物については、ねこのや利用規約 (UnityEditor_Rev20200630) が適用されます。
-詳しくは下記ページをご確認ください。
+VRChat SDK2 Compatible Viewer は、下記外部ページの利用規約に沿ってご利用が可能です。
 
-https://docs.mochizuki.moe/Terms/UnityEditor_R20200630
+https://docs.mochizuki.moe/vrchat/sdk2-compat-view/terms/
+
+# 連絡先
+
+Twitter @6jz / @NatsunekoLabs
+VRChat  natsuneko_vrc
+Discord https://discord.gg/h42BzsFtD2

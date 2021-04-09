@@ -1,25 +1,20 @@
-﻿/*-------------------------------------------------------------------------------------------
- * Copyright (c) Fuyuno Mikazuki / Natsuneko. All rights reserved.
- * Licensed under the MIT License. See LICENSE in the project root for license information.
- *------------------------------------------------------------------------------------------*/
-
-#if UNITY_EDITOR
-
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 using UnityEngine;
 using UnityEngine.Networking;
 
 using Version = System.Version;
 
-namespace Mochizuki.VRChat.Extensions.Convenience
+namespace Mochizuki.VRChat.SDK2CompatView.Internal
 {
     /// <summary>
     ///     Check the new version of your package, required GitHub public repository for managing version.
     /// </summary>
     public class VersionManager
     {
-        private readonly string _currentVersion;
+		private const string Namespace = "Mochizuki.VRChat.SDK2CompatView";
+
+		private readonly string _currentVersion;
         private readonly Regex _format;
         private readonly string _repository;
         private string _latestVersion;
@@ -39,7 +34,7 @@ namespace Mochizuki.VRChat.Extensions.Convenience
                 {
                     _latestVersion = "0.0.0";
 
-                    Debug.Log($"[Mochizuki.Extensions] Failed to fetch the remote version, set the latest version of {_repository} to 0.0.0.");
+                    Debug.Log($"[{Namespace}] Failed to fetch the remote version, set the latest version of {_repository} to 0.0.0.");
                     return _latestVersion;
                 }
 
@@ -49,7 +44,7 @@ namespace Mochizuki.VRChat.Extensions.Convenience
                 if (_format != null)
                     _latestVersion = _format.Match(_latestVersion).Groups["version"].Value;
 
-                Debug.Log($"[Mochizuki.Extensions] Latest version of {_repository} is {_latestVersion}.");
+                Debug.Log($"[{Namespace}] Latest version of {_repository} is {_latestVersion}.");
                 return _latestVersion;
             }
         }
@@ -65,7 +60,7 @@ namespace Mochizuki.VRChat.Extensions.Convenience
 
         public void CheckNewVersion()
         {
-            Debug.Log($"[Mochizuki.Extensions] Checking new version for {_repository}...");
+            Debug.Log($"[{Namespace}] Checking new version for {_repository}...");
             _www = UnityWebRequest.Get($"https://api.github.com/repos/{_repository}/releases/latest");
             _www.SendWebRequest();
         }
@@ -80,5 +75,3 @@ namespace Mochizuki.VRChat.Extensions.Convenience
         }
     }
 }
-
-#endif
